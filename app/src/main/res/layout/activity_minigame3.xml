@@ -1,8 +1,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#303F9F">
+    android:background="#9F7E30">
 
+    <!-- Time bar at the top -->
     <View
         android:id="@+id/timeBar"
         android:layout_width="match_parent"
@@ -11,11 +12,12 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="0dp" />
 
+    <!-- Button centered -->
     <Button
-        android:id="@+id/tapButton"
+        android:id="@+id/btn_win3"
         android:layout_width="wrap_content"
         android:layout_height="57dp"
-        android:text="Win Game 1"
+        android:text="Win Game 3"
         android:textSize="24sp"
         android:layout_centerInParent="true"/>
 </RelativeLayout>

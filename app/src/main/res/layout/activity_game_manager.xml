@@ -1,15 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#101010">
+    android:layout_height="match_parent">
 
+    <!-- Dark overlay during countdown -->
+    <View
+        android:id="@+id/dimOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#000000"
+        android:alpha="0" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="top|center_horizontal"
+        android:paddingTop="40dp">
+
+        <TextView
+            android:id="@+id/scoreText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Score: 0"
+            android:textSize="26sp"
+            android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/livesText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lives: 3"
+            android:textSize="26sp"
+            android:textColor="@android:color/black"
+            android:layout_marginTop="10dp" />
+    </LinearLayout>
+
+    <!-- Countdown number -->
     <TextView
-        android:id="@+id/tv_status"
+        android:id="@+id/countdownText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Game starting..."
-        android:textColor="#FFFFFF"
-        android:textSize="20sp"
-        android:layout_centerInParent="true"/>
-</RelativeLayout>
+        android:text="3"
+        android:textSize="90sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+</FrameLayout>
