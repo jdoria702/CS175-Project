@@ -27,11 +27,10 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-//        btnShop.setOnClickListener(v -> {
-//            // TODO: Start your ShopActivity
-//            Intent intent = new Intent(MainActivity.this, ShopActivity.class);
-//            startActivity(intent);
-//        });
+        btnShop.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ShopActivity.class);
+            startActivity(intent);
+        });
 
         btnQuit.setOnClickListener(v -> finishAffinity()); // Closes the app
     }

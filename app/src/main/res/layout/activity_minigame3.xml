@@ -12,6 +12,16 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="0dp" />
 
+    <TextView
+        android:id="@+id/characterLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Character: Rookie"
+        android:textColor="#FFFFFF"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/timeBar"
+        android:layout_marginTop="12dp" />
+
     <!-- Button centered -->
     <Button
         android:id="@+id/btn_win3"

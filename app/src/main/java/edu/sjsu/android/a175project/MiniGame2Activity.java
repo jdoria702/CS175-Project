@@ -6,6 +6,7 @@ import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import edu.sjsu.android.a175project.ShopManager;
 
 public class MiniGame2Activity extends AppCompatActivity {
 
@@ -22,6 +23,8 @@ public class MiniGame2Activity extends AppCompatActivity {
 
         Button tapBtn = findViewById(R.id.btn_win2);
         timeBar = findViewById(R.id.timeBar);
+        TextView characterLabel = findViewById(R.id.characterLabel);
+        characterLabel.setText("Character: " + ShopManager.getSelectedCharacter(this));
 
         timeBar.setPivotX(0);
 
