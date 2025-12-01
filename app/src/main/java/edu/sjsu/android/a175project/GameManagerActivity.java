@@ -7,30 +7,38 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.LinearLayout;
 import java.util.Random;
+import edu.sjsu.android.a175project.ShopManager;
+import edu.sjsu.android.a175project.HighScoreManager;
 
 public class GameManagerActivity extends AppCompatActivity {
 
-    private TextView countdownText, scoreText, livesText;
+    private TextView countdownText, scoreText, characterText;
+    private LinearLayout livesContainer;
+    private TextView coinText;
     private View dimOverlay;
 
     private int score = 0;
     private int lives = 3;
     private int previousMinigame = -1;
+    private int lastCoinGain = 0;
 
     private int minigameCount = 5;
-    private int difficultyDelay = 1500;
+    private static final int COIN_REWARD = 10;
+    private static final int NEXT_GAME_DELAY = 1000;
 
     // Difficulty values used by ALL minigames
     public static int difficultyLevel = 1;
     public static long baseTimer = 5000;      // Base: 5 seconds
-    public static long timerDecrease = 500;   // -0.5 sec per level
+    public static long timerDecrease = 1000;   // -1.0 sec per level
 
     // Called by minigames to get their countdown timer
     public static long getTimerDuration() {
         long duration = baseTimer - ((difficultyLevel - 1) * timerDecrease);
-        return Math.max(1500, duration); // never less than 1.5 sec
+        return Math.max(2000, duration); // never less than 2 sec
     }
 
     // Called by minigames when they succeed
@@ -45,7 +53,9 @@ public class GameManagerActivity extends AppCompatActivity {
 
         countdownText = findViewById(R.id.countdownText);
         scoreText = findViewById(R.id.scoreText);
-        livesText = findViewById(R.id.livesText);
+        livesContainer = findViewById(R.id.livesContainer);
+        characterText = findViewById(R.id.characterText);
+        coinText = findViewById(R.id.coinText);
         dimOverlay = findViewById(R.id.dimOverlay);
 
         updateUI();
@@ -57,7 +67,41 @@ public class GameManagerActivity extends AppCompatActivity {
     // ---------------------------------------------------------
     private void updateUI() {
         scoreText.setText("Score: " + score);
-        livesText.setText("Lives: " + lives);
+        updateLivesDisplay();
+        if (characterText != null) {
+            characterText.setText("Character: " + ShopManager.getSelectedCharacter(this));
+        }
+        if (coinText != null) {
+            int coins = ShopManager.getCoins(this);
+            String coinLabel = "Coins: " + coins;
+            if (lastCoinGain > 0) {
+                coinLabel += " (+" + lastCoinGain + ")";
+            }
+            coinText.setText(coinLabel);
+        }
+    }
+
+    private void updateLivesDisplay() {
+        if (livesContainer == null) return;
+        livesContainer.removeAllViews();
+        String characterName = ShopManager.getSelectedCharacter(this);
+
+        for (int i = 0; i < lives; i++) {
+            ImageView lifeIcon = new ImageView(this);
+            lifeIcon.setImageResource(ShopManager.getCharacterDrawable(characterName));
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    120,
+                    120
+            );
+            if (i > 0) {
+                params.setMarginStart(12);
+            }
+            lifeIcon.setLayoutParams(params);
+            lifeIcon.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            lifeIcon.setAdjustViewBounds(true);
+            livesContainer.addView(lifeIcon);
+        }
     }
 
     // ---------------------------------------------------------
@@ -151,22 +195,22 @@ public class GameManagerActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 // WIN
                 score++;
+                lastCoinGain = COIN_REWARD;
+                ShopManager.addCoins(this, COIN_REWARD);
                 updateUI();
 
-                // Speed up pacing between games
-                difficultyDelay = Math.max(500, difficultyDelay - 100);
-
-                new Handler().postDelayed(this::startNextMinigame, difficultyDelay);
+                new Handler().postDelayed(this::startNextMinigame, NEXT_GAME_DELAY);
 
             } else {
                 // LOSS
                 lives--;
+                lastCoinGain = 0;
                 updateUI();
 
                 if (lives <= 0) {
                     endGame();
                 } else {
-                    new Handler().postDelayed(this::startNextMinigame, difficultyDelay);
+                    new Handler().postDelayed(this::startNextMinigame, NEXT_GAME_DELAY);
                 }
             }
         }
@@ -176,11 +220,19 @@ public class GameManagerActivity extends AppCompatActivity {
     // End Game
     // ---------------------------------------------------------
     private void endGame() {
-        Intent intent = new Intent();
+        int previousHigh = HighScoreManager.getHighScore(this);
+        boolean isHigh = score > previousHigh;
+        if (isHigh) {
+            HighScoreManager.setHighScore(this, score);
+        }
+
+        Intent intent = new Intent(this, GameOverActivity.class);
         intent.putExtra("FINAL_SCORE", score);
-        setResult(RESULT_OK, intent);
+        intent.putExtra("IS_HIGH_SCORE", isHigh);
+        intent.putExtra("HIGH_SCORE", Math.max(previousHigh, score));
+        startActivity(intent);
+
         difficultyLevel = 1;
-        difficultyDelay = 1500;
         finish();
     }
 }

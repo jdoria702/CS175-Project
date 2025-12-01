@@ -6,15 +6,21 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+import edu.sjsu.android.a175project.ShopManager;
 
 public class MiniGame1Activity extends AppCompatActivity {
 
     private CountDownTimer countDownTimer;
     private boolean gameOver = false;
     private View timeBar;
+    private View flameOverlay;
+    private TextView flameCounter;
 
     private long maxTime;
+    private static final int FLAME_TAPS_REQUIRED = 5;
+    private int tapsLeft = FLAME_TAPS_REQUIRED;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,8 +29,16 @@ public class MiniGame1Activity extends AppCompatActivity {
 
         Button tapBtn = findViewById(R.id.tapButton);
         timeBar = findViewById(R.id.timeBar);
+        TextView characterLabel = findViewById(R.id.characterLabel);
+        ImageView characterBody = findViewById(R.id.characterBody);
+        flameOverlay = findViewById(R.id.flameOverlay);
+        flameCounter = findViewById(R.id.flameCounter);
+        String selectedChar = ShopManager.getSelectedCharacter(this);
+        characterLabel.setText("Character: " + selectedChar);
+        characterBody.setImageResource(ShopManager.getCharacterDrawable(selectedChar));
 
         timeBar.setPivotX(0);
+        updateFlameUI();
 
         maxTime = GameManagerActivity.getTimerDuration();
 
@@ -32,11 +46,29 @@ public class MiniGame1Activity extends AppCompatActivity {
 
         tapBtn.setOnClickListener(v -> {
             if (!gameOver) {
-                gameOver = true;
-                countDownTimer.cancel();
-                minigamePassed();
+                handleExtinguishTap();
             }
         });
+    }
+
+    private void handleExtinguishTap() {
+        tapsLeft = Math.max(0, tapsLeft - 1);
+        updateFlameUI();
+        if (tapsLeft == 0) {
+            gameOver = true;
+            countDownTimer.cancel();
+            minigamePassed();
+        }
+    }
+
+    private void updateFlameUI() {
+        if (flameCounter != null) {
+            flameCounter.setText("Flames left: " + tapsLeft);
+        }
+        if (flameOverlay != null) {
+            float alpha = Math.max(0f, (float) tapsLeft / FLAME_TAPS_REQUIRED);
+            flameOverlay.setAlpha(alpha);
+        }
     }
 
     private void startCountdown() {

@@ -11,11 +11,84 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="0dp" />
 
-    <Button
-        android:id="@+id/tapButton"
+    <LinearLayout
+        android:id="@+id/topInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@id/timeBar"
+        android:gravity="center_horizontal"
+        android:paddingTop="12dp">
+
+        <TextView
+            android:id="@+id/characterLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Character: Rookie"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/instructions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tap fast to extinguish the flames!"
+            android:textColor="#E0E7FF"
+            android:layout_marginTop="6dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/centerArea"
         android:layout_width="wrap_content"
-        android:layout_height="57dp"
-        android:text="Win Game 1"
-        android:textSize="24sp"
-        android:layout_centerInParent="true"/>
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_centerInParent="true">
+
+        <FrameLayout
+            android:id="@+id/characterContainer"
+            android:layout_width="200dp"
+            android:layout_height="200dp">
+
+            <ImageView
+                android:id="@+id/characterBody"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/char_blue"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true" />
+
+            <View
+                android:id="@+id/flameOverlay"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#F97316"
+                android:alpha="0.9" />
+
+            <TextView
+                android:id="@+id/flameLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="FIRE!"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:layout_gravity="center" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/flameCounter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Flames left: 10"
+            android:textColor="#FFFFFF"
+            android:layout_marginTop="12dp" />
+
+        <Button
+            android:id="@+id/tapButton"
+            android:layout_width="wrap_content"
+            android:layout_height="57dp"
+            android:text="Tap to douse!"
+            android:textSize="20sp"
+            android:layout_marginTop="12dp"/>
+    </LinearLayout>
 </RelativeLayout>

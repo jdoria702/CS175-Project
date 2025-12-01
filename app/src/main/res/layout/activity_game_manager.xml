@@ -27,11 +27,37 @@
             android:textColor="@android:color/black" />
 
         <TextView
-            android:id="@+id/livesText"
+            android:id="@+id/livesLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Lives: 3"
-            android:textSize="26sp"
+            android:text="Lives"
+            android:textSize="22sp"
+            android:textColor="@android:color/black"
+            android:layout_marginTop="10dp" />
+
+        <LinearLayout
+            android:id="@+id/livesContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="6dp"
+            android:gravity="center_vertical" />
+
+        <TextView
+            android:id="@+id/coinText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Coins: 0"
+            android:textSize="22sp"
+            android:textColor="@android:color/black"
+            android:layout_marginTop="10dp" />
+
+        <TextView
+            android:id="@+id/characterText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Character: Rookie"
+            android:textSize="20sp"
             android:textColor="@android:color/black"
             android:layout_marginTop="10dp" />
     </LinearLayout>

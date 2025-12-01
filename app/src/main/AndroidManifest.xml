@@ -17,6 +17,8 @@
         <activity android:name=".MiniGame4Activity"/>
         <activity android:name=".MiniGame5Activity"/>
         <activity android:name=".GameManagerActivity"/>
+        <activity android:name=".ShopActivity"/>
+        <activity android:name=".GameOverActivity"/>
         <activity
             android:name=".MainActivity"
             android:exported="true">
