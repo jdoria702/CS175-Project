@@ -6,17 +6,30 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.LinearLayout;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 public class MiniGame2Activity extends AppCompatActivity {
 
+    private enum WireTarget {
+        RED, BLUE, GREEN
+    }
+
     private View timeBar;
     private TextView characterLabel;
+    private TextView gameTitle;
     private TextView centerHint;
 
+    private LinearLayout wireRow;
     private View wireRed;
     private View wireBlue;
     private View wireGreen;
 
+    private WireTarget correctWire;
     private boolean gameOver = false;
     private CountDownTimer timer;
     private long totalTime = 4000;   // will be replaced by GameManager timer if available
@@ -28,23 +41,15 @@ public class MiniGame2Activity extends AppCompatActivity {
 
         // Find views
         timeBar = findViewById(R.id.timeBar);
-        TextView gameTitle = findViewById(R.id.gameTitle);
-        characterLabel = findViewById(R.id.characterLabel);
+        gameTitle = findViewById(R.id.gameTitle);
         centerHint = findViewById(R.id.centerHint);
 
+        wireRow = findViewById(R.id.wireRow);
         wireRed = findViewById(R.id.wireRed);
         wireBlue = findViewById(R.id.wireBlue);
         wireGreen = findViewById(R.id.wireGreen);
 
-        // Set clear, visible texts
-        if (gameTitle != null) {
-            gameTitle.setText("TAP THE BLUE WIRE!");
-        }
-
         String selectedChar = ShopManager.getSelectedCharacter(this);
-        characterLabel.setText("Character: " + selectedChar);
-
-        centerHint.setText("Tap the BLUE wire before time runs out!");
 
         // Timer bar will shrink from left to right
         timeBar.setPivotX(0f);
@@ -55,26 +60,15 @@ public class MiniGame2Activity extends AppCompatActivity {
             totalTime = duration;
         }
 
+        // Randomize the correct wire and positions, then update instruction text
+        shuffleWirePositions();
+        chooseTargetWire();
+
         startTimer();
 
-        // Blue wire = correct → pass game
-        wireBlue.setOnClickListener(v -> {
-            if (gameOver) return;
-            gameOver = true;
-            if (timer != null) timer.cancel();
-            minigamePassed();
-        });
-
-        // Red or Green wire = wrong → fail game
-        View.OnClickListener wrongWireListener = v -> {
-            if (gameOver) return;
-            gameOver = true;
-            if (timer != null) timer.cancel();
-            minigameFailed();
-        };
-
-        wireRed.setOnClickListener(wrongWireListener);
-        wireGreen.setOnClickListener(wrongWireListener);
+        wireRed.setOnClickListener(v -> handleWireTap(WireTarget.RED));
+        wireBlue.setOnClickListener(v -> handleWireTap(WireTarget.BLUE));
+        wireGreen.setOnClickListener(v -> handleWireTap(WireTarget.GREEN));
     }
 
     private void startTimer() {
@@ -93,6 +87,70 @@ public class MiniGame2Activity extends AppCompatActivity {
                 }
             }
         }.start();
+    }
+
+    private void chooseTargetWire() {
+        WireTarget[] options = WireTarget.values();
+        correctWire = options[new Random().nextInt(options.length)];
+        updateInstructionText();
+    }
+
+    private void updateInstructionText() {
+        String colorName = "UNKNOWN";
+        switch (correctWire) {
+            case RED:
+                colorName = "RED";
+                break;
+            case BLUE:
+                colorName = "BLUE";
+                break;
+            case GREEN:
+                colorName = "GREEN";
+                break;
+        }
+
+        if (gameTitle != null) {
+            gameTitle.setText("TAP THE " + colorName + " WIRE!");
+        }
+        centerHint.setText("Tap the " + colorName + " wire before time runs out!");
+    }
+
+    private void shuffleWirePositions() {
+        if (wireRow == null) return;
+
+        List<View> wires = Arrays.asList(wireRed, wireBlue, wireGreen);
+        Collections.shuffle(wires, new Random());
+
+        wireRow.removeAllViews();
+
+        int marginPx = dpToPx(24);
+        int sizePx = dpToPx(80);
+
+        for (int i = 0; i < wires.size(); i++) {
+            View wire = wires.get(i);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(sizePx, sizePx);
+            if (i < wires.size() - 1) {
+                params.setMarginEnd(marginPx);
+            }
+            wireRow.addView(wire, params);
+        }
+    }
+
+    private int dpToPx(int dp) {
+        float density = getResources().getDisplayMetrics().density;
+        return Math.round(dp * density);
+    }
+
+    private void handleWireTap(WireTarget tappedWire) {
+        if (gameOver) return;
+        gameOver = true;
+        if (timer != null) timer.cancel();
+
+        if (tappedWire == correctWire) {
+            minigamePassed();
+        } else {
+            minigameFailed();
+        }
     }
 
     private void minigamePassed() {
