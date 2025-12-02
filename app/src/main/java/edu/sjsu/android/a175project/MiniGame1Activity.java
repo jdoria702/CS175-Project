@@ -1,110 +1,111 @@
 package edu.sjsu.android.a175project;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.ForegroundColorSpan;
-import android.graphics.Color;
 
 public class MiniGame1Activity extends AppCompatActivity {
 
-    private CountDownTimer countDownTimer;
-    private boolean gameOver = false;
-    private View timeBar;
-    private ImageView flameOverlay;
 
-    private long maxTime;
-    private static final int FLAME_TAPS_REQUIRED = 7;
-    private int tapsLeft = FLAME_TAPS_REQUIRED;
+    private View timeBar;
+    private TextView characterLabel;
+    private TextView centerHint;
+
+    private View wireRed;
+    private View wireBlue;
+    private View wireGreen;
+
+    private boolean gameOver = false;
+    private CountDownTimer timer;
+    private long maxTime;   // use same idea as MiniGame1
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_minigame1);
+        setContentView(R.layout.activity_minigame2);
 
+        // find views
         timeBar = findViewById(R.id.timeBar);
-        TextView titleFire = findViewById(R.id.titleFire);
-        ImageView characterBody = findViewById(R.id.characterBody);
-        flameOverlay = findViewById(R.id.flameOverlay);
+        characterLabel = findViewById(R.id.characterLabel);
+        centerHint = findViewById(R.id.centerHint);
+
+        wireRed = findViewById(R.id.wireRed);
+        wireBlue = findViewById(R.id.wireBlue);
+        wireGreen = findViewById(R.id.wireGreen);
+
+        // show selected character name (same idea as other screens)
         String selectedChar = ShopManager.getSelectedCharacter(this);
-        characterBody.setImageResource(ShopManager.getCharacterDrawable(selectedChar));
-        applyFireTitleColor(titleFire);
+        characterLabel.setText("Character: " + selectedChar);
 
+        // shrink timer from the left
         timeBar.setPivotX(0);
-        updateFlameUI();
 
+        // get timer duration from GameManager so difficulty can change
         maxTime = GameManagerActivity.getTimerDuration();
 
-        startCountdown();
-
-        flameOverlay.setOnClickListener(v -> {
-            if (!gameOver) {
-                handleExtinguishTap();
-            }
-        });
+        setupWireClicks();
+        startTimer();
     }
 
-    private void applyFireTitleColor(TextView titleFire) {
-        if (titleFire == null) return;
-        String text = "Blow out the FIRE!";
-        SpannableString ss = new SpannableString(text);
-        int start = text.indexOf("FIRE");
-        if (start >= 0) {
-            ss.setSpan(new ForegroundColorSpan(Color.parseColor("#FF2D2D")),
-                    start,
-                    start + 4,
-                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        }
-        titleFire.setText(ss);
+    private void setupWireClicks() {
+        // wrong wires
+        wireRed.setOnClickListener(v -> handleWrongTap());
+        wireGreen.setOnClickListener(v -> handleWrongTap());
+
+        // correct wire
+        wireBlue.setOnClickListener(v -> handleCorrectTap());
     }
 
-    private void handleExtinguishTap() {
-        tapsLeft = Math.max(0, tapsLeft - 1);
-        updateFlameUI();
-        if (tapsLeft == 0) {
-            gameOver = true;
-            countDownTimer.cancel();
-            minigamePassed();
-        }
+    private void handleCorrectTap() {
+        if (gameOver) return;
+        gameOver = true;
+        centerHint.setText("Bomb defused!");
+        minigamePassed();
     }
 
-    private void updateFlameUI() {
-        if (flameOverlay != null) {
-            float alpha = Math.max(0f, (float) tapsLeft / FLAME_TAPS_REQUIRED);
-            flameOverlay.setAlpha(alpha);
-        }
+    private void handleWrongTap() {
+        if (gameOver) return;
+        gameOver = true;
+        centerHint.setText("Wrong wire!");
+        minigameFailed();
     }
 
-    private void startCountdown() {
-        countDownTimer = new CountDownTimer(maxTime, 50) {
+    private void startTimer() {
+        timer = new CountDownTimer(maxTime, 16) {
             @Override
             public void onTick(long millisUntilFinished) {
+                if (gameOver) {
+                    cancel();
+                    return;
+                }
                 float fraction = (float) millisUntilFinished / maxTime;
                 timeBar.setScaleX(fraction);
             }
 
             @Override
             public void onFinish() {
-                if (!gameOver) {
-                    gameOver = true;
-                    minigameFailed();
-                }
+                if (gameOver) return;
+                gameOver = true;
+                centerHint.setText("Too slow!");
+                minigameFailed();
             }
         }.start();
     }
 
     private void minigamePassed() {
+        // same pattern as MiniGame1
+        if (timer != null) timer.cancel();
         setResult(RESULT_OK);
         GameManagerActivity.increaseDifficulty();
         finish();
     }
 
     private void minigameFailed() {
+        // same pattern as MiniGame1
+        if (timer != null) timer.cancel();
         setResult(RESULT_CANCELED);
         finish();
     }
@@ -112,6 +113,6 @@ public class MiniGame1Activity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (countDownTimer != null) countDownTimer.cancel();
+        if (timer != null) timer.cancel();
     }
 }

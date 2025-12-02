@@ -1,78 +1,110 @@
 package edu.sjsu.android.a175project;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
-import edu.sjsu.android.a175project.ShopManager;
 
 public class MiniGame2Activity extends AppCompatActivity {
 
-    private CountDownTimer countDownTimer;
-    private boolean gameOver = false;
     private View timeBar;
+    private TextView characterLabel;
+    private TextView centerHint;
 
-    private long maxTime;
+    private View wireRed;
+    private View wireBlue;
+    private View wireGreen;
+
+    private boolean gameOver = false;
+    private CountDownTimer timer;
+    private long totalTime = 4000; // 4 seconds
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_minigame2);
 
-        Button tapBtn = findViewById(R.id.btn_win2);
         timeBar = findViewById(R.id.timeBar);
-        TextView characterLabel = findViewById(R.id.characterLabel);
-        characterLabel.setText("Character: " + ShopManager.getSelectedCharacter(this));
+        characterLabel = findViewById(R.id.characterLabel);
+        centerHint = findViewById(R.id.centerHint);
 
-        timeBar.setPivotX(0);
+        wireRed = findViewById(R.id.wireRed);
+        wireBlue = findViewById(R.id.wireBlue);
+        wireGreen = findViewById(R.id.wireGreen);
 
-        maxTime = GameManagerActivity.getTimerDuration();
-
-        startCountdown();
-
-        tapBtn.setOnClickListener(v -> {
-            if (!gameOver) {
-                gameOver = true;
-                countDownTimer.cancel();
-                minigamePassed();
-            }
-        });
+        setupWireClicks();
+        startTimer();
     }
 
-    private void startCountdown() {
-        countDownTimer = new CountDownTimer(maxTime, 50) {
+    private void setupWireClicks() {
+        wireRed.setOnClickListener(v -> handleWrongTap());
+        wireGreen.setOnClickListener(v -> handleWrongTap());
+
+        wireBlue.setOnClickListener(v -> handleCorrectTap());
+    }
+
+    private void handleCorrectTap() {
+        if (gameOver) return;
+
+        gameOver = true;
+        centerHint.setText("Bomb defused! You win!");
+        finishGame(true);
+    }
+
+    private void handleWrongTap() {
+        if (gameOver) return;
+
+        gameOver = true;
+        centerHint.setText("Wrong wire! BOOM!");
+        finishGame(false);
+    }
+
+    private void startTimer() {
+        timer = new CountDownTimer(totalTime, 16) {
             @Override
-            public void onTick(long millisUntilFinished) {
-                float fraction = (float) millisUntilFinished / maxTime;
-                timeBar.setScaleX(fraction);
+            public void onTick(long millisLeft) {
+                if (gameOver) {
+                    timer.cancel();
+                    return;
+                }
+
+                float fraction = millisLeft / (float) totalTime;
+                int newWidth = (int) (timeBar.getRootView().getWidth() * fraction);
+
+                timeBar.getLayoutParams().width = newWidth;
+                timeBar.requestLayout();
             }
 
             @Override
             public void onFinish() {
-                if (!gameOver) {
-                    gameOver = true;
-                    minigameFailed();
-                }
+                if (gameOver) return;
+
+                gameOver = true;
+                centerHint.setText("Too slow! You exploded!");
+                finishGame(false);
             }
-        }.start();
+        };
+
+        timer.start();
     }
 
-    private void minigamePassed() {
-        setResult(RESULT_OK);
-        GameManagerActivity.increaseDifficulty();
-        finish();
-    }
+    private void finishGame(boolean success) {
+        if (timer != null)
+            timer.cancel();
 
-    private void minigameFailed() {
-        setResult(RESULT_CANCELED);
+        Intent result = new Intent();
+        result.putExtra("MINIGAME_RESULT", success);
+        setResult(RESULT_OK, result);
+
         finish();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (countDownTimer != null) countDownTimer.cancel();
+        if (timer != null) timer.cancel();
     }
 }
