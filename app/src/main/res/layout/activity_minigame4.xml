@@ -1,9 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#309F94">
+    android:background="#BDBDBD">
 
-    <!-- Time bar at the top -->
     <View
         android:id="@+id/timeBar"
         android:layout_width="match_parent"
@@ -12,22 +11,42 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="0dp" />
 
+    <FrameLayout
+        android:id="@+id/sceneRoot"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <View
+            android:id="@+id/wallView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="16dp"
+            android:background="#D6D6D6" />
+
+        <FrameLayout
+            android:id="@+id/paintContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="16dp" />
+
+    </FrameLayout>
+
+
+
     <TextView
-        android:id="@+id/characterLabel"
+        android:id="@+id/centerHint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Character: Rookie"
+        android:layout_centerInParent="true"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:background="#CC000000"
         android:textColor="#FFFFFF"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/timeBar"
-        android:layout_marginTop="12dp" />
+        android:textSize="16sp"
+        android:text="Tap all spots in 5s"/>
 
-    <!-- Button centered -->
-    <Button
-        android:id="@+id/btn_win4"
-        android:layout_width="wrap_content"
-        android:layout_height="57dp"
-        android:text="Win Game 4"
-        android:textSize="24sp"
-        android:layout_centerInParent="true"/>
+
+
 </RelativeLayout>

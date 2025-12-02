@@ -1,25 +1,25 @@
 package edu.sjsu.android.a175project;
 
 import androidx.appcompat.app.AppCompatActivity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import edu.sjsu.android.a175project.ShopManager;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.graphics.Color;
 
 public class MiniGame1Activity extends AppCompatActivity {
 
     private CountDownTimer countDownTimer;
     private boolean gameOver = false;
     private View timeBar;
-    private View flameOverlay;
-    private TextView flameCounter;
+    private ImageView flameOverlay;
 
     private long maxTime;
-    private static final int FLAME_TAPS_REQUIRED = 5;
+    private static final int FLAME_TAPS_REQUIRED = 7;
     private int tapsLeft = FLAME_TAPS_REQUIRED;
 
     @Override
@@ -27,15 +27,13 @@ public class MiniGame1Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_minigame1);
 
-        Button tapBtn = findViewById(R.id.tapButton);
         timeBar = findViewById(R.id.timeBar);
-        TextView characterLabel = findViewById(R.id.characterLabel);
+        TextView titleFire = findViewById(R.id.titleFire);
         ImageView characterBody = findViewById(R.id.characterBody);
         flameOverlay = findViewById(R.id.flameOverlay);
-        flameCounter = findViewById(R.id.flameCounter);
         String selectedChar = ShopManager.getSelectedCharacter(this);
-        characterLabel.setText("Character: " + selectedChar);
         characterBody.setImageResource(ShopManager.getCharacterDrawable(selectedChar));
+        applyFireTitleColor(titleFire);
 
         timeBar.setPivotX(0);
         updateFlameUI();
@@ -44,11 +42,25 @@ public class MiniGame1Activity extends AppCompatActivity {
 
         startCountdown();
 
-        tapBtn.setOnClickListener(v -> {
+        flameOverlay.setOnClickListener(v -> {
             if (!gameOver) {
                 handleExtinguishTap();
             }
         });
+    }
+
+    private void applyFireTitleColor(TextView titleFire) {
+        if (titleFire == null) return;
+        String text = "Blow out the FIRE!";
+        SpannableString ss = new SpannableString(text);
+        int start = text.indexOf("FIRE");
+        if (start >= 0) {
+            ss.setSpan(new ForegroundColorSpan(Color.parseColor("#FF2D2D")),
+                    start,
+                    start + 4,
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        titleFire.setText(ss);
     }
 
     private void handleExtinguishTap() {
@@ -62,9 +74,6 @@ public class MiniGame1Activity extends AppCompatActivity {
     }
 
     private void updateFlameUI() {
-        if (flameCounter != null) {
-            flameCounter.setText("Flames left: " + tapsLeft);
-        }
         if (flameOverlay != null) {
             float alpha = Math.max(0f, (float) tapsLeft / FLAME_TAPS_REQUIRED);
             flameOverlay.setAlpha(alpha);

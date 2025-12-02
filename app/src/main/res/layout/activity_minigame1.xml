@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#303F9F">
+    android:background="@drawable/background_kitchen">
 
     <View
         android:id="@+id/timeBar"
@@ -15,26 +15,29 @@
         android:id="@+id/topInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_below="@id/timeBar"
+        android:layout_marginTop="568dp"
         android:gravity="center_horizontal"
-        android:paddingTop="12dp">
+        android:orientation="vertical"
+        android:paddingTop="16dp">
 
         <TextView
-            android:id="@+id/characterLabel"
+            android:id="@+id/titleFire"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Character: Rookie"
+            android:text="Blow out the FIRE!"
             android:textColor="#FFFFFF"
-            android:textSize="18sp" />
+            android:textSize="40sp"
+            android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/instructions"
+            android:id="@+id/subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tap fast to extinguish the flames!"
+            android:layout_marginTop="6dp"
+            android:text="Tap to extinguish"
             android:textColor="#E0E7FF"
-            android:layout_marginTop="6dp" />
+            android:textSize="24sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -43,52 +46,31 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center_horizontal"
-        android:layout_centerInParent="true">
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="150dp">
 
         <FrameLayout
             android:id="@+id/characterContainer"
-            android:layout_width="200dp"
-            android:layout_height="200dp">
+            android:layout_width="380dp"
+            android:layout_height="380dp">
 
             <ImageView
                 android:id="@+id/characterBody"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="280dp"
+                android:layout_height="280dp"
+                android:layout_gravity="center"
                 android:src="@drawable/char_blue"
                 android:scaleType="fitCenter"
                 android:adjustViewBounds="true" />
 
-            <View
+            <ImageView
                 android:id="@+id/flameOverlay"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#F97316"
-                android:alpha="0.9" />
-
-            <TextView
-                android:id="@+id/flameLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="FIRE!"
-                android:textColor="#FFFFFF"
-                android:textStyle="bold"
-                android:layout_gravity="center" />
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/flame" />
         </FrameLayout>
-
-        <TextView
-            android:id="@+id/flameCounter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Flames left: 10"
-            android:textColor="#FFFFFF"
-            android:layout_marginTop="12dp" />
-
-        <Button
-            android:id="@+id/tapButton"
-            android:layout_width="wrap_content"
-            android:layout_height="57dp"
-            android:text="Tap to douse!"
-            android:textSize="20sp"
-            android:layout_marginTop="12dp"/>
     </LinearLayout>
 </RelativeLayout>
