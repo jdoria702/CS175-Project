@@ -15,11 +15,11 @@
         android:id="@+id/topInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/timeBar"
-        android:layout_marginTop="568dp"
+        android:layout_alignParentBottom="true"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:paddingTop="16dp">
+        android:paddingHorizontal="24dp"
+        android:paddingVertical="24dp">
 
         <TextView
             android:id="@+id/titleFire"
@@ -47,8 +47,8 @@
         android:orientation="vertical"
         android:gravity="center_horizontal"
         android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="150dp">
+        android:layout_above="@id/topInfo"
+        android:layout_marginBottom="24dp">
 
         <FrameLayout
             android:id="@+id/characterContainer"
