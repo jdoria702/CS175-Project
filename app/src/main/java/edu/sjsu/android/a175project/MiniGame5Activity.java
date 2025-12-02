@@ -36,7 +36,6 @@ public class MiniGame5Activity extends AppCompatActivity {
         TextView characterLabel = findViewById(R.id.characterLabel);
 
         String selected = ShopManager.getSelectedCharacter(this);
-        characterLabel.setText("Character: " + selected);
         characterView.setImageResource(ShopManager.getCharacterDrawable(selected));
         timeBar.setPivotX(0);
 
