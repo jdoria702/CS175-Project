@@ -10,6 +10,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.LinearLayout;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 import edu.sjsu.android.a175project.ShopManager;
 import edu.sjsu.android.a175project.HighScoreManager;
@@ -29,6 +32,8 @@ public class GameManagerActivity extends AppCompatActivity {
     private int minigameCount = 5;
     private static final int COIN_REWARD = 10;
     private static final int NEXT_GAME_DELAY = 1000;
+    private final Random random = new Random();
+    private final List<Integer> minigameBag = new ArrayList<>();
 
     // Difficulty values used by ALL minigames
     public static int difficultyLevel = 1;
@@ -172,16 +177,21 @@ public class GameManagerActivity extends AppCompatActivity {
     }
 
     private int pickRandomMinigame() {
-        Random random = new Random();
-        int choice;
-
         if (minigameCount <= 1) return 0;
 
-        do {
-            choice = random.nextInt(minigameCount);
-        } while (choice == previousMinigame);
+        if (minigameBag.isEmpty()) {
+            for (int i = 0; i < minigameCount; i++) {
+                minigameBag.add(i);
+            }
+            Collections.shuffle(minigameBag, random);
 
-        return choice;
+            // Avoid back-to-back repeats when a new bag starts
+            if (previousMinigame >= 0 && minigameBag.size() > 1 && minigameBag.get(0) == previousMinigame) {
+                Collections.swap(minigameBag, 0, 1);
+            }
+        }
+
+        return minigameBag.remove(0);
     }
 
     // ---------------------------------------------------------
