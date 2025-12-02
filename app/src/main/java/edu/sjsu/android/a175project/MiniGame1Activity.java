@@ -10,7 +10,6 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.graphics.Color;
-import edu.sjsu.android.a175project.ShopManager;
 
 public class MiniGame1Activity extends AppCompatActivity {
 
