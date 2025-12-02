@@ -1,33 +1,69 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#9F7E30">
+    android:background="@drawable/background_kitchen">
 
-    <!-- Time bar at the top -->
+    <!-- Time bar -->
     <View
         android:id="@+id/timeBar"
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:background="#FF5252"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="0dp" />
+        android:layout_alignParentTop="true"/>
 
-    <TextView
-        android:id="@+id/characterLabel"
-        android:layout_width="wrap_content"
+    <!-- Top title -->
+    <LinearLayout
+        android:id="@+id/topInfo"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Character: Rookie"
-        android:textColor="#FFFFFF"
-        android:layout_centerHorizontal="true"
         android:layout_below="@id/timeBar"
-        android:layout_marginTop="12dp" />
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingTop="16dp">
 
-    <!-- Button centered -->
-    <Button
-        android:id="@+id/btn_win3"
-        android:layout_width="wrap_content"
-        android:layout_height="57dp"
-        android:text="Win Game 3"
-        android:textSize="24sp"
-        android:layout_centerInParent="true"/>
+        <TextView
+            android:id="@+id/titleClean"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Clean the DIRT!"
+            android:textColor="#FFFFFF"
+            android:textSize="40sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/subtitleClean"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Swipe or tap to clean!"
+            android:textColor="#E0E7FF"
+            android:textSize="24sp" />
+    </LinearLayout>
+
+    <!-- Character and dirt -->
+    <FrameLayout
+        android:id="@+id/cleanContainer"
+        android:layout_width="380dp"
+        android:layout_height="380dp"
+        android:layout_centerInParent="true">
+
+        <ImageView
+            android:id="@+id/characterBody"
+            android:layout_width="280dp"
+            android:layout_height="280dp"
+            android:layout_gravity="center"
+            android:src="@drawable/char_blue"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true" />
+
+        <!-- Dirt overlay -->
+        <ImageView
+            android:id="@+id/dirtOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/dirt_overlay"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"/>
+    </FrameLayout>
+
 </RelativeLayout>
