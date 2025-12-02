@@ -1,7 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#BDBDBD">
+    android:background="#BBD0FF">
 
     <!-- Top timer bar -->
     <View
@@ -11,65 +12,79 @@
         android:layout_alignParentTop="true"
         android:background="#FF5252" />
 
+    <!-- Big, clear title at the top -->
+    <TextView
+        android:id="@+id/gameTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/timeBar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="TAP THE BLUE WIRE!"
+        android:textColor="#000000"
+        android:textSize="26sp"
+        android:textStyle="bold" />
+
     <!-- Shows which character is selected -->
     <TextView
         android:id="@+id/characterLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/gameTitle"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/timeBar"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
         android:text="Character:"
         android:textColor="#000000"
         android:textSize="18sp"
         android:textStyle="bold" />
 
-    <!-- Center instructions -->
+    <!-- Center instruction text -->
     <TextView
         android:id="@+id/centerHint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:background="#AA000000"
-        android:padding="15dp"
-        android:text="Tap the BLUE wire in 4 seconds!"
+        android:padding="12dp"
+        android:text="Tap the BLUE wire before time runs out!"
         android:textColor="#FFFFFF"
-        android:textSize="16sp" />
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:background="#AA000000" />
 
-    <!-- Row of wires to tap -->
-    <LinearLayout
-        android:id="@+id/wireRow"
-        android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="150dp"
-        android:orientation="horizontal"
-        android:gravity="center">
+    <!-- Blue wire (correct one) -->
+    <View
+        android:id="@+id/wireBlue"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="40dp"
+        android:background="#2196F3"
+        android:clickable="true"
+        android:focusable="true" />
 
-        <View
-            android:id="@+id/wireRed"
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:layout_weight="1"
-            android:layout_margin="10dp"
-            android:background="#F44336" />
+    <!-- Red wire (wrong) -->
+    <View
+        android:id="@+id/wireRed"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignTop="@id/wireBlue"
+        android:layout_toLeftOf="@id/wireBlue"
+        android:layout_marginRight="32dp"
+        android:background="#F44336"
+        android:clickable="true"
+        android:focusable="true" />
 
-        <View
-            android:id="@+id/wireBlue"
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:layout_weight="1"
-            android:layout_margin="10dp"
-            android:background="#2196F3" />
-
-        <View
-            android:id="@+id/wireGreen"
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:layout_weight="1"
-            android:layout_margin="10dp"
-            android:background="#4CAF50" />
-
-    </LinearLayout>
+    <!-- Green wire (wrong) -->
+    <View
+        android:id="@+id/wireGreen"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignTop="@id/wireBlue"
+        android:layout_toRightOf="@id/wireBlue"
+        android:layout_marginLeft="32dp"
+        android:background="#4CAF50"
+        android:clickable="true"
+        android:focusable="true" />
 
 </RelativeLayout>

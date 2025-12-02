@@ -2,7 +2,6 @@ package edu.sjsu.android.a175project;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
@@ -20,14 +19,16 @@ public class MiniGame2Activity extends AppCompatActivity {
 
     private boolean gameOver = false;
     private CountDownTimer timer;
-    private long totalTime = 4000; // 4 seconds
+    private long totalTime = 4000;   // will be replaced by GameManager timer if available
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_minigame2);
 
+        // Find views
         timeBar = findViewById(R.id.timeBar);
+        TextView gameTitle = findViewById(R.id.gameTitle);
         characterLabel = findViewById(R.id.characterLabel);
         centerHint = findViewById(R.id.centerHint);
 
@@ -35,70 +36,73 @@ public class MiniGame2Activity extends AppCompatActivity {
         wireBlue = findViewById(R.id.wireBlue);
         wireGreen = findViewById(R.id.wireGreen);
 
-        setupWireClicks();
+        // Set clear, visible texts
+        if (gameTitle != null) {
+            gameTitle.setText("TAP THE BLUE WIRE!");
+        }
+
+        String selectedChar = ShopManager.getSelectedCharacter(this);
+        characterLabel.setText("Character: " + selectedChar);
+
+        centerHint.setText("Tap the BLUE wire before time runs out!");
+
+        // Timer bar will shrink from left to right
+        timeBar.setPivotX(0f);
+
+        // Use shared timer duration from GameManager if available
+        long duration = GameManagerActivity.getTimerDuration();
+        if (duration > 0) {
+            totalTime = duration;
+        }
+
         startTimer();
-    }
 
-    private void setupWireClicks() {
-        wireRed.setOnClickListener(v -> handleWrongTap());
-        wireGreen.setOnClickListener(v -> handleWrongTap());
+        // Blue wire = correct → pass game
+        wireBlue.setOnClickListener(v -> {
+            if (gameOver) return;
+            gameOver = true;
+            if (timer != null) timer.cancel();
+            minigamePassed();
+        });
 
-        wireBlue.setOnClickListener(v -> handleCorrectTap());
-    }
+        // Red or Green wire = wrong → fail game
+        View.OnClickListener wrongWireListener = v -> {
+            if (gameOver) return;
+            gameOver = true;
+            if (timer != null) timer.cancel();
+            minigameFailed();
+        };
 
-    private void handleCorrectTap() {
-        if (gameOver) return;
-
-        gameOver = true;
-        centerHint.setText("Bomb defused! You win!");
-        finishGame(true);
-    }
-
-    private void handleWrongTap() {
-        if (gameOver) return;
-
-        gameOver = true;
-        centerHint.setText("Wrong wire! BOOM!");
-        finishGame(false);
+        wireRed.setOnClickListener(wrongWireListener);
+        wireGreen.setOnClickListener(wrongWireListener);
     }
 
     private void startTimer() {
         timer = new CountDownTimer(totalTime, 16) {
             @Override
-            public void onTick(long millisLeft) {
-                if (gameOver) {
-                    timer.cancel();
-                    return;
-                }
-
-                float fraction = millisLeft / (float) totalTime;
-                int newWidth = (int) (timeBar.getRootView().getWidth() * fraction);
-
-                timeBar.getLayoutParams().width = newWidth;
-                timeBar.requestLayout();
+            public void onTick(long millisUntilFinished) {
+                float fraction = (float) millisUntilFinished / totalTime;
+                timeBar.setScaleX(fraction);
             }
 
             @Override
             public void onFinish() {
-                if (gameOver) return;
-
-                gameOver = true;
-                centerHint.setText("Too slow! You exploded!");
-                finishGame(false);
+                if (!gameOver) {
+                    gameOver = true;
+                    minigameFailed();
+                }
             }
-        };
-
-        timer.start();
+        }.start();
     }
 
-    private void finishGame(boolean success) {
-        if (timer != null)
-            timer.cancel();
+    private void minigamePassed() {
+        setResult(RESULT_OK);
+        GameManagerActivity.increaseDifficulty();
+        finish();
+    }
 
-        Intent result = new Intent();
-        result.putExtra("MINIGAME_RESULT", success);
-        setResult(RESULT_OK, result);
-
+    private void minigameFailed() {
+        setResult(RESULT_CANCELED);
         finish();
     }
 
