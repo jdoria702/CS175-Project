@@ -1,33 +1,86 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#9F7E30">
+    android:background="@drawable/background_bathroom"
+    android:clipChildren="true">
 
-    <!-- Time bar at the top -->
+    <!-- Time bar -->
     <View
         android:id="@+id/timeBar"
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:background="#FF5252"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="0dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
-    <TextView
-        android:id="@+id/characterLabel"
-        android:layout_width="wrap_content"
+    <!-- Top title -->
+
+    <!-- Character and dirt -->
+
+    <LinearLayout
+        android:id="@+id/topInfo"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Character: Rookie"
-        android:textColor="#FFFFFF"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/timeBar"
-        android:layout_marginTop="12dp" />
+        android:layout_marginTop="112dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/timeBar">
 
-    <!-- Button centered -->
-    <Button
-        android:id="@+id/btn_win3"
-        android:layout_width="wrap_content"
-        android:layout_height="57dp"
-        android:text="Win Game 3"
-        android:textSize="24sp"
-        android:layout_centerInParent="true"/>
-</RelativeLayout>
+        <TextView
+            android:id="@+id/titleClean"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Clean the DIRT!"
+            android:textColor="#FF0000"
+            android:textSize="32sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/subtitleClean"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Swipe to clean!"
+            android:textColor="#FF0000"
+            android:textSize="24sp" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/cleanContainer"
+        android:layout_width="500dp"
+        android:layout_height="500dp"
+        android:translationY="40dp"
+        android:clipChildren="true"
+        android:clipToPadding="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="1.0">
+
+        <ImageView
+            android:id="@+id/characterBody"
+            android:layout_width="380dp"
+            android:layout_height="380dp"
+            android:layout_gravity="center"
+            android:src="@drawable/char_blue"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true" />
+
+        <!-- Dirt overlay -->
+        <ImageView
+            android:id="@+id/dirtOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/dirt_overlay"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"/>
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
