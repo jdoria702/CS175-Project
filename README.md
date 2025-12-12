@@ -23,7 +23,9 @@ https://docs.google.com/spreadsheets/d/1LZBgoxzAL9ifMNK36L_TGCEkzw7maTnfje_CUBvB
   
 ## Specific hardware requirements:
 * Android device with Android API 29
-* Android emulator can be used from android studio: https://developer.android.com/studio
+* Android emulator can be used from android studio:
+
+https://developer.android.com/studio
 
 ## Download and Run Guide
 Download APK
