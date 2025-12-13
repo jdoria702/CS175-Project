@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">175Project</string>
+    <string name="character_blue">Character: Blue</string>
+    <string name="erase_all_paint_hint">Erase all paint in 4s</string>
 </resources>
