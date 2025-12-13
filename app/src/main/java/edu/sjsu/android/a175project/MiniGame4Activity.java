@@ -19,14 +19,14 @@ import java.util.Random;
 
 public class MiniGame4Activity extends AppCompatActivity {
 
+
     private CountDownTimer countDownTimer;
     private boolean gameOver = false;
     private View timeBar;
-    private long maxTime = 5000;
-
-
+    private static final long MAX_TIME_MS = 4_000L;
+    private static final long TICK_MS = 50L;
+    
     private FrameLayout sceneRoot;
-    private View wallView;
     private FrameLayout paintContainer;
     private TextView centerHint;
 
@@ -40,9 +40,13 @@ public class MiniGame4Activity extends AppCompatActivity {
         setContentView(R.layout.activity_minigame4);
 
         timeBar = findViewById(R.id.timeBar);
+        TextView characterLabel = findViewById(R.id.characterLabel);
+        if (characterLabel != null) {
+            characterLabel.setText(R.string.character_blue);
+        }
 
         sceneRoot = findViewById(R.id.sceneRoot);
-        wallView = findViewById(R.id.wallView);
+        View wallView = findViewById(R.id.wallView);
         paintContainer = findViewById(R.id.paintContainer);
         centerHint = findViewById(R.id.centerHint);
 
@@ -61,7 +65,7 @@ public class MiniGame4Activity extends AppCompatActivity {
         });
 
         if (centerHint != null) {
-            centerHint.setText("Erase all paint in 4s");
+            centerHint.setText(R.string.erase_all_paint_hint);
             centerHint.setAlpha(1f);
             centerHint.animate()
                     .alpha(0f)
@@ -116,7 +120,7 @@ public class MiniGame4Activity extends AppCompatActivity {
             spot.setOnClickListener(v -> eraseSpot(spot));
         }
 
-        spotsRemaining = count;
+        spotsRemaining = spots.size();
     }
 
     private void addWallPattern(int width, int height, int padding) {
@@ -187,11 +191,13 @@ public class MiniGame4Activity extends AppCompatActivity {
     }
 
     private void startCountdown() {
-        countDownTimer = new CountDownTimer(maxTime, 50) {
+        if (timeBar != null) timeBar.setScaleX(1f);
+
+        countDownTimer = new CountDownTimer(MAX_TIME_MS, TICK_MS) {
             @Override
             public void onTick(long millisUntilFinished) {
-                float fraction = (float) millisUntilFinished / maxTime;
-                timeBar.setScaleX(fraction);
+                float fraction = millisUntilFinished / (float) MAX_TIME_MS;
+                if (timeBar != null) timeBar.setScaleX(fraction);
             }
 
             @Override
@@ -203,6 +209,7 @@ public class MiniGame4Activity extends AppCompatActivity {
             }
         }.start();
     }
+
 
     private void minigamePassed() {
         setResult(RESULT_OK);
