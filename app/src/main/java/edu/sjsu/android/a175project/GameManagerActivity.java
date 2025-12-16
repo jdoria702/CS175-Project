@@ -14,8 +14,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import edu.sjsu.android.a175project.ShopManager;
-import edu.sjsu.android.a175project.HighScoreManager;
 
 public class GameManagerActivity extends AppCompatActivity {
 

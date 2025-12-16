@@ -20,7 +20,6 @@ public class MiniGame2Activity extends AppCompatActivity {
     }
 
     private View timeBar;
-    private TextView characterLabel;
     private TextView gameTitle;
     private TextView centerHint;
 

@@ -2,7 +2,6 @@ package edu.sjsu.android.a175project;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.animation.ValueAnimator;
-import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.MotionEvent;
@@ -33,7 +32,6 @@ public class MiniGame5Activity extends AppCompatActivity {
         characterView = findViewById(R.id.characterBody);
         trampolineView = findViewById(R.id.trampoline);
         gameArea = findViewById(R.id.gameArea);
-        TextView characterLabel = findViewById(R.id.characterLabel);
 
         String selected = ShopManager.getSelectedCharacter(this);
         characterView.setImageResource(ShopManager.getCharacterDrawable(selected));
@@ -129,7 +127,6 @@ public class MiniGame5Activity extends AppCompatActivity {
         float trampLeft = trampolineView.getX();
         float trampRight = trampLeft + trampolineView.getWidth();
         float trampTop = trampolineView.getY();
-        float trampBottom = trampTop + trampolineView.getHeight();
 
         // Narrow catch window to make alignment more precise
         float catchHalfWidth = trampolineView.getWidth() * 0.2f; // 40% total width window

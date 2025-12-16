@@ -7,7 +7,6 @@ import android.os.CountDownTimer;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 public class MiniGame3Activity extends AppCompatActivity {
 
